@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-Language Translator Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Language Translator Chatbot</h2>
+    <div id="chat"></div>
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Type here...">
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('user-input');
+        const chat = document.getElementById('chat');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const msg = input.value;
+            chat.innerHTML += `<div>User: ${msg}</div>`;
+            input.value = '';
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await res.json();
+            chat.innerHTML += `<div>Bot: ${data.response}</div>`;
+        };
+    </script>
+</body>
+</html>
